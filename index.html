@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agente IA - Professor de Odontologia</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 600px; margin: auto; }
+        .result { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Agente IA - Professor de Odontologia</h1>
+        <form id="uploadForm">
+            <label for="file">Envie seu trabalho acadêmico (PDF):</label>
+            <input type="file" id="file" name="file" accept="application/pdf" required>
+            <button type="submit">Enviar</button>
+        </form>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('uploadForm');
+        const resultDiv = document.getElementById('result');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fileInput = document.getElementById('file');
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            const response = await fetch('http://localhost:3000/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                resultDiv.innerHTML = `<pre>${JSON.stringify(data.analysis, null, 2)}</pre>`;
+            } else {
+                resultDiv.innerHTML = `<p>Erro: ${data.error}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
