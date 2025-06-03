@@ -37,17 +37,16 @@
                 const response = await fetch(`${backendUrl}/upload`, {
                     method: 'POST',
                     body: formData,
-                    mode: 'cors' // Adicionado para permitir requisições CORS
+                    mode: 'cors'
                 });
+
+                if (!response.ok) {
+                    throw new Error(`Erro no servidor: ${response.status} - ${response.statusText}`);
+                }
 
                 const data = await response.json();
                 if (data.success) {
-                    // Verifique se data.analysis é um array antes de usar .map()
-                    if (Array.isArray(data.analysis)) {
-                        resultDiv.innerHTML = `<pre>${JSON.stringify(data.analysis.map(item => item), null, 2)}</pre>`;
-                    } else {
-                        resultDiv.innerHTML = `<pre>${JSON.stringify(data.analysis, null, 2)}</pre>`;
-                    }
+                    resultDiv.innerHTML = `<pre>${JSON.stringify(data.analysis, null, 2)}</pre>`;
                 } else {
                     resultDiv.innerHTML = `<p>Erro: ${data.error}</p>`;
                 }
